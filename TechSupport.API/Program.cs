@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using TechSupport.API.Data;
+using TechSupport.API.Middleware;
 using TechSupport.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -124,6 +125,8 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
     DbSeeder.Seed(db);
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
