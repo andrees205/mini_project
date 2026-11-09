@@ -16,9 +16,6 @@ public class CrearIncidenteDto
     [Required(ErrorMessage = "La prioridad es obligatoria (Baja, Media, Alta o Critica).")]
     [EnumDataType(typeof(Prioridad), ErrorMessage = "Prioridad no válida (Baja, Media, Alta o Critica).")]
     public Prioridad? Prioridad { get; set; }
-
-    [Required]
-    public int UsuarioId { get; set; }
 }
 
 public record IncidenteDto(

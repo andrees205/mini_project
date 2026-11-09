@@ -1,28 +1,28 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TechSupport.API.Data;
 using TechSupport.API.DTOs;
+using TechSupport.API.Extensions;
 using TechSupport.API.Models;
 
 namespace TechSupport.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/incidentes")]
 public class IncidentesController(AppDbContext db) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<IncidenteDto>> Crear(CrearIncidenteDto dto)
     {
-        if (!await db.Usuarios.AnyAsync(u => u.Id == dto.UsuarioId))
-            return BadRequest(new { success = false, message = "El usuario indicado no existe." });
-
         var incidente = new Incidente
         {
             Titulo = dto.Titulo.Trim(),
             Descripcion = dto.Descripcion.Trim(),
             Prioridad = dto.Prioridad!.Value,
             Estado = EstadoIncidente.Pendiente,
-            UsuarioId = dto.UsuarioId,
+            UsuarioId = User.GetUsuarioId(),
             FechaCreacion = DateTime.UtcNow
         };
 
