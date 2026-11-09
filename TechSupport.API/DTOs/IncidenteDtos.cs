@@ -7,15 +7,28 @@ public class CrearIncidenteDto
 {
     [Required(ErrorMessage = "El título es obligatorio.")]
     [StringLength(150, MinimumLength = 3, ErrorMessage = "El título debe tener entre 3 y 150 caracteres.")]
-    public string Titulo { get; set; } = string.Empty;
+    public string Titulo { get; set; } = null!;
 
     [Required(ErrorMessage = "La descripción es obligatoria.")]
     [StringLength(2000, ErrorMessage = "La descripción no puede superar 2000 caracteres.")]
-    public string Descripcion { get; set; } = string.Empty;
+    public string Descripcion { get; set; } = null!;
 
     [Required(ErrorMessage = "La prioridad es obligatoria (Baja, Media, Alta o Critica).")]
     [EnumDataType(typeof(Prioridad), ErrorMessage = "Prioridad no válida (Baja, Media, Alta o Critica).")]
     public Prioridad? Prioridad { get; set; }
+}
+
+public class AsignarTecnicoDto
+{
+    [Required(ErrorMessage = "El tecnicoId es obligatorio.")]
+    public int? TecnicoId { get; set; }
+}
+
+public class CambiarEstadoDto
+{
+    [Required(ErrorMessage = "El nuevoEstado es obligatorio (EnProceso, Resuelto o Cerrado).")]
+    [EnumDataType(typeof(EstadoIncidente), ErrorMessage = "Estado no válido.")]
+    public EstadoIncidente? NuevoEstado { get; set; }
 }
 
 public record IncidenteDto(

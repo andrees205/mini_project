@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IIncidenteService, IncidenteService>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,8 +68,34 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddControllers(o =>
+    {
+        o.ModelBindingMessageProvider.SetValueIsInvalidAccessor(_ => "Valor no válido.");
+        o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    })
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        o.AllowInputFormatterExceptionMessages = false;
+    })
+    .ConfigureApiBehaviorOptions(o =>
+    {
+        o.InvalidModelStateResponseFactory = context =>
+        {
+            var errores = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    e => string.IsNullOrEmpty(e.Key) ? "body" : e.Key.TrimStart('$', '.'),
+                    e => e.Value!.Errors.Select(x => string.IsNullOrEmpty(x.ErrorMessage) ? "Valor no válido." : x.ErrorMessage).ToArray());
+
+            return new BadRequestObjectResult(new
+            {
+                success = false,
+                message = "Los datos enviados no son válidos.",
+                errors = errores
+            });
+        };
+    });
 
 builder.Services.AddOpenApi(o => o.AddDocumentTransformer((document, _, _) =>
 {
