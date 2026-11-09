@@ -1,6 +1,106 @@
-@TechSupport.API_HostAddress = http://localhost:5131
+### TechSupport.API — peticiones de prueba (VS Code REST Client / Visual Studio / Rider)
+### 1) Ejecuta un login, copia el "token" de la respuesta y pégalo en la variable correspondiente.
 
-GET {{TechSupport.API_HostAddress}}/weatherforecast/
-Accept: application/json
+@base = http://localhost:5131
+@tokenAdmin = pega-aqui-el-token-de-admin
+@tokenTecnico = pega-aqui-el-token-de-tecnico1
+@tokenUsuario = pega-aqui-el-token-de-usuario1
 
-###
+### Login (admin) → 200 + token
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "admin", "password": "Admin123!" }
+
+### Login (tecnico1)
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "tecnico1", "password": "Tecnico123!" }
+
+### Login (usuario1)
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "usuario1", "password": "Usuario123!" }
+
+### Prueba 2: login con contraseña incorrecta → 401
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "usuario1", "password": "incorrecta" }
+
+### Prueba 3: consultar sin JWT → 401
+GET {{base}}/api/incidentes
+
+### Prueba 6: crear incidente (usuario1) → 201
+POST {{base}}/api/incidentes
+Authorization: Bearer {{tokenUsuario}}
+Content-Type: application/json
+
+{ "titulo": "Impresora no imprime", "descripcion": "La impresora del piso 2 no responde", "prioridad": "Alta" }
+
+### Prueba 5: crear sin título → 400
+POST {{base}}/api/incidentes
+Authorization: Bearer {{tokenUsuario}}
+Content-Type: application/json
+
+{ "descripcion": "No funciona el correo", "prioridad": "Media" }
+
+### Listar (cada rol ve lo suyo)
+GET {{base}}/api/incidentes
+Authorization: Bearer {{tokenUsuario}}
+
+### Detalle (404 si no le corresponde)
+GET {{base}}/api/incidentes/1
+Authorization: Bearer {{tokenUsuario}}
+
+### Prueba 8: cerrar un incidente Pendiente → 400
+PUT {{base}}/api/incidentes/1/estado
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{ "nuevoEstado": "Cerrado" }
+
+### Asignar a un usuario que NO es técnico → 400
+PUT {{base}}/api/incidentes/1/asignar
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{ "tecnicoId": 4 }
+
+### Asignar a tecnico1 (Id 2) → 200, estado Asignado
+PUT {{base}}/api/incidentes/1/asignar
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{ "tecnicoId": 2 }
+
+### Técnico avanza: Asignado → EnProceso
+PUT {{base}}/api/incidentes/1/estado
+Authorization: Bearer {{tokenTecnico}}
+Content-Type: application/json
+
+{ "nuevoEstado": "EnProceso" }
+
+### Técnico avanza: EnProceso → Resuelto (se llena fechaResolucion)
+PUT {{base}}/api/incidentes/1/estado
+Authorization: Bearer {{tokenTecnico}}
+Content-Type: application/json
+
+{ "nuevoEstado": "Resuelto" }
+
+### Técnico avanza: Resuelto → Cerrado
+PUT {{base}}/api/incidentes/1/estado
+Authorization: Bearer {{tokenTecnico}}
+Content-Type: application/json
+
+{ "nuevoEstado": "Cerrado" }
+
+### Prueba 4: técnico intenta eliminar → 403
+DELETE {{base}}/api/incidentes/1
+Authorization: Bearer {{tokenTecnico}}
+
+### Admin intenta eliminar un Cerrado → 400 (decisión A3)
+DELETE {{base}}/api/incidentes/1
+Authorization: Bearer {{tokenAdmin}}
