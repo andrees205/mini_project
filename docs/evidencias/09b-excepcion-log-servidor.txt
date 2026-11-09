@@ -1,0 +1,13 @@
+LOG DEL SERVIDOR para la prueba 9 (requestId 0HNPUN0IP1CGE:00000001)
+El detalle técnico SOLO aparece aquí; el cliente recibió el JSON genérico de 09-excepcion-500.txt.
+
+fail: TechSupport.API.Middleware.ExceptionHandlingMiddleware[0]
+      Excepción no controlada. RequestId: 0HNPUN0IP1CGE:00000001. GET /api/debug/error
+      System.InvalidOperationException: Fallo simulado al abrir /var/app/data/techsupport.db (tabla Incidentes, SQLite)
+         at TechSupport.API.Controllers.DebugController.LanzarError() in TechSupport.API/Controllers/DebugController.cs:line 18
+         at lambda_method318(Closure, Object, Object[])
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+      --- End of stack trace from previous location ---

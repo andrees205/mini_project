@@ -1,0 +1,11 @@
+PRUEBA 25 — Admin elimina un incidente Pendiente
+Actor: admin    Esperado: 204    Obtenido: 204    OK
+
+### Petición
+curl -X DELETE http://localhost:5131/api/incidentes/2 \
+  -H 'Authorization: Bearer <token de admin>'
+
+### Respuesta
+HTTP/1.1 204 No Content
+
+(sin cuerpo)

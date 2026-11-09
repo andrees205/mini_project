@@ -1,0 +1,39 @@
+PRUEBA 24 — admin lista: ve todos
+Actor: admin    Esperado: 200    Obtenido: 200    OK
+
+### Petición
+curl -X GET http://localhost:5131/api/incidentes \
+  -H 'Authorization: Bearer <token de admin>'
+
+### Respuesta
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+[
+  {
+    "id": 2,
+    "titulo": "Correo no sincroniza",
+    "descripcion": "Outlook no descarga correos",
+    "prioridad": "Media",
+    "estado": "Pendiente",
+    "usuarioId": 5,
+    "usuario": "usuario2",
+    "tecnicoId": null,
+    "tecnico": null,
+    "fechaCreacion": "2026-11-09T23:21:15.9001459Z",
+    "fechaResolucion": null
+  },
+  {
+    "id": 1,
+    "titulo": "Impresora no imprime",
+    "descripcion": "La impresora del piso 2 no responde",
+    "prioridad": "Alta",
+    "estado": "Cerrado",
+    "usuarioId": 4,
+    "usuario": "usuario1",
+    "tecnicoId": 2,
+    "tecnico": "tecnico1",
+    "fechaCreacion": "2026-11-09T23:21:15.6134715Z",
+    "fechaResolucion": "2026-11-09T23:21:16.9811699Z"
+  }
+]

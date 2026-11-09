@@ -1,0 +1,27 @@
+PRUEBA 6 — Crear incidente correctamente
+Actor: usuario1    Esperado: 201    Obtenido: 201    OK
+
+### Petición
+curl -X POST http://localhost:5131/api/incidentes \
+  -H 'Authorization: Bearer <token de usuario1>' \
+  -H 'Content-Type: application/json' \
+  -d '{"titulo":"Impresora no imprime","descripcion":"La impresora del piso 2 no responde","prioridad":"Alta"}'
+
+### Respuesta
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Location: http://localhost:5131/api/incidentes/1
+
+{
+  "id": 1,
+  "titulo": "Impresora no imprime",
+  "descripcion": "La impresora del piso 2 no responde",
+  "prioridad": "Alta",
+  "estado": "Pendiente",
+  "usuarioId": 4,
+  "usuario": "usuario1",
+  "tecnicoId": null,
+  "tecnico": null,
+  "fechaCreacion": "2026-11-09T23:21:15.6134715Z",
+  "fechaResolucion": null
+}

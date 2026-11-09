@@ -1,0 +1,17 @@
+PRUEBA 20 — Reabrir un incidente Cerrado
+Actor: admin    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/estado \
+  -H 'Authorization: Bearer <token de admin>' \
+  -H 'Content-Type: application/json' \
+  -d '{"nuevoEstado":"EnProceso"}'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "El incidente está Cerrado y no se puede reabrir. Si el problema vuelve, crea un incidente nuevo."
+}

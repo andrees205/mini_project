@@ -1,0 +1,15 @@
+PRUEBA 21 — Admin elimina un incidente Cerrado (decisión A3)
+Actor: admin    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X DELETE http://localhost:5131/api/incidentes/1 \
+  -H 'Authorization: Bearer <token de admin>'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "No se puede eliminar un incidente Cerrado: forma parte del historial del servicio."
+}

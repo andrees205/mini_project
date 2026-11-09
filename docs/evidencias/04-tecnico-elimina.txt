@@ -1,0 +1,15 @@
+PRUEBA 4 — Técnico intenta eliminar un incidente
+Actor: tecnico1    Esperado: 403    Obtenido: 403    OK
+
+### Petición
+curl -X DELETE http://localhost:5131/api/incidentes/1 \
+  -H 'Authorization: Bearer <token de tecnico1>'
+
+### Respuesta
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "No tienes permiso para realizar esta operación."
+}

@@ -1,0 +1,17 @@
+PRUEBA 12 — Usuario intenta asignar técnico
+Actor: usuario1    Esperado: 403    Obtenido: 403    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/asignar \
+  -H 'Authorization: Bearer <token de usuario1>' \
+  -H 'Content-Type: application/json' \
+  -d '{"tecnicoId":2}'
+
+### Respuesta
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "No tienes permiso para realizar esta operación."
+}

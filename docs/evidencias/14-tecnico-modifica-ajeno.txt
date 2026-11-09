@@ -1,0 +1,17 @@
+PRUEBA 14 — tecnico2 cambia estado de incidente de tecnico1 (caso 1)
+Actor: tecnico2    Esperado: 404    Obtenido: 404    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/estado \
+  -H 'Authorization: Bearer <token de tecnico2>' \
+  -H 'Content-Type: application/json' \
+  -d '{"nuevoEstado":"EnProceso"}'
+
+### Respuesta
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "Incidente no encontrado."
+}

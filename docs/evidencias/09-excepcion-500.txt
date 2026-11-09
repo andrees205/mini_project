@@ -1,0 +1,16 @@
+PRUEBA 9 — La API produce una excepción (endpoint temporal)
+Actor: anónimo    Esperado: 500    Obtenido: 500    OK
+
+### Petición
+curl -X GET http://localhost:5131/api/debug/error
+
+### Respuesta
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "Ocurrió un error al procesar la solicitud.",
+  "requestId": "0HNPUN0IP1CGE:00000001",
+  "timestamp": "2026-11-09T23:21:16Z"
+}

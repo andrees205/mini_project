@@ -1,0 +1,26 @@
+PRUEBA 18 — tecnico1 avanza EnProceso → Resuelto (se llena FechaResolucion)
+Actor: tecnico1    Esperado: 200    Obtenido: 200    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/estado \
+  -H 'Authorization: Bearer <token de tecnico1>' \
+  -H 'Content-Type: application/json' \
+  -d '{"nuevoEstado":"Resuelto"}'
+
+### Respuesta
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "id": 1,
+  "titulo": "Impresora no imprime",
+  "descripcion": "La impresora del piso 2 no responde",
+  "prioridad": "Alta",
+  "estado": "Resuelto",
+  "usuarioId": 4,
+  "usuario": "usuario1",
+  "tecnicoId": 2,
+  "tecnico": "tecnico1",
+  "fechaCreacion": "2026-11-09T23:21:15.6134715Z",
+  "fechaResolucion": "2026-11-09T23:21:16.9811699Z"
+}

@@ -1,0 +1,26 @@
+PRUEBA 23 — usuario2 lista: solo ve los que creó
+Actor: usuario2    Esperado: 200    Obtenido: 200    OK
+
+### Petición
+curl -X GET http://localhost:5131/api/incidentes \
+  -H 'Authorization: Bearer <token de usuario2>'
+
+### Respuesta
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+[
+  {
+    "id": 2,
+    "titulo": "Correo no sincroniza",
+    "descripcion": "Outlook no descarga correos",
+    "prioridad": "Media",
+    "estado": "Pendiente",
+    "usuarioId": 5,
+    "usuario": "usuario2",
+    "tecnicoId": null,
+    "tecnico": null,
+    "fechaCreacion": "2026-11-09T23:21:15.9001459Z",
+    "fechaResolucion": null
+  }
+]

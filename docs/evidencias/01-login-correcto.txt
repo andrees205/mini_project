@@ -1,0 +1,19 @@
+PRUEBA 1 — Login con credenciales correctas
+Actor: anónimo    Esperado: 200    Obtenido: 200    OK
+
+### Petición
+curl -X POST http://localhost:5131/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"nombreUsuario":"usuario1","password":"Usuario123!"}'
+
+### Respuesta
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUZWNoU3VwcG9ydC5DbGllbnRlcyIsImlzcyI6IlRlY2hTdXBwb3J0LkFQSSIsImV4cCI6MTc5NDI3MDA3NSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzdWFyaW8xIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXN1YXJpbyIsImlhdCI6MTc5NDI2NjQ3NSwibmJmIjoxNzk0MjY2NDc1fQ.Y-b4B5srxRzzWEZuOueBxRf3oEeGcu9kK7CwcT2Mdaw",
+  "expira": "2026-11-10T00:21:15.2470843Z",
+  "usuarioId": 4,
+  "nombreUsuario": "usuario1",
+  "rol": "Usuario"
+}

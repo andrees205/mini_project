@@ -1,0 +1,17 @@
+PRUEBA 11 — Asignar a un usuario que no es Técnico (caso 3)
+Actor: admin    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/asignar \
+  -H 'Authorization: Bearer <token de admin>' \
+  -H 'Content-Type: application/json' \
+  -d '{"tecnicoId":4}'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "El usuario 4 no existe o no tiene rol Tecnico. Solo se puede asignar a técnicos."
+}

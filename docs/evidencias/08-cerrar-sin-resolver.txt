@@ -1,0 +1,17 @@
+PRUEBA 8 — Cerrar un incidente que no está Resuelto (Pendiente)
+Actor: admin    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/estado \
+  -H 'Authorization: Bearer <token de admin>' \
+  -H 'Content-Type: application/json' \
+  -d '{"nuevoEstado":"Cerrado"}'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "No se puede cerrar un incidente que no está Resuelto (estado actual: Pendiente)."
+}

@@ -1,0 +1,17 @@
+PRUEBA 16 — Saltar pasos: Asignado → Resuelto (caso 3)
+Actor: tecnico1    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X PUT http://localhost:5131/api/incidentes/1/estado \
+  -H 'Authorization: Bearer <token de tecnico1>' \
+  -H 'Content-Type: application/json' \
+  -d '{"nuevoEstado":"Resuelto"}'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "Transición no permitida: Asignado → Resuelto. El único estado siguiente válido es EnProceso."
+}

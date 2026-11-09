@@ -1,0 +1,15 @@
+PRUEBA 7 — Usuario consulta incidente de otro
+Actor: usuario1    Esperado: 404    Obtenido: 404    OK
+
+### Petición
+curl -X GET http://localhost:5131/api/incidentes/2 \
+  -H 'Authorization: Bearer <token de usuario1>'
+
+### Respuesta
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "Incidente no encontrado."
+}

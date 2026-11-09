@@ -1,0 +1,22 @@
+PRUEBA 5 — Crear incidente sin título
+Actor: usuario1    Esperado: 400    Obtenido: 400    OK
+
+### Petición
+curl -X POST http://localhost:5131/api/incidentes \
+  -H 'Authorization: Bearer <token de usuario1>' \
+  -H 'Content-Type: application/json' \
+  -d '{"descripcion":"No funciona el correo","prioridad":"Media"}'
+
+### Respuesta
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{
+  "success": false,
+  "message": "Los datos enviados no son válidos.",
+  "errors": {
+    "Titulo": [
+      "El título es obligatorio."
+    ]
+  }
+}
