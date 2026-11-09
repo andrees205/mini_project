@@ -98,6 +98,8 @@ builder.Services.AddControllers(o =>
         };
     });
 
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddOpenApi(o => o.AddDocumentTransformer((document, _, _) =>
 {
     document.Components ??= new OpenApiComponents();
