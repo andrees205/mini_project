@@ -12,3 +12,5 @@ public class LoginDto
 }
 
 public record LoginResponseDto(string Token, DateTime Expira, int UsuarioId, string NombreUsuario, string Rol);
+
+public record UsuarioResumenDto(int Id, string NombreUsuario);
