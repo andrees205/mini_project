@@ -19,6 +19,32 @@ dotnet run --launch-profile http
 - La base de datos `techsupport.db` (SQLite) se crea sola al arrancar (`EnsureCreated`) junto con los usuarios
   de prueba. Para empezar de cero, borra el archivo y vuelve a ejecutar.
 
+### Interfaz web (TechSupport.Web)
+
+Proyecto ASP.NET Core MVC que consume la API por HTTP; no tiene acceso a la base de datos.
+Necesita la API en ejecución. En otra terminal:
+
+```bash
+cd TechSupport.Web
+dotnet run --launch-profile http
+```
+
+Abre **http://localhost:5200** e inicia sesión con cualquiera de los usuarios de prueba.
+La URL de la API se configura en `TechSupport.Web/appsettings.json` (`Api:BaseUrl`).
+En Visual Studio se pueden abrir los dos proyectos con `TechSupport.slnx` (configurar inicio múltiple: API y Web).
+
+- El login llama a `POST /api/auth/login` y guarda el JWT en una cookie de sesión `HttpOnly`, que expira junto con el token.
+- Cada petición a la API se envía con `Authorization: Bearer <token>`.
+- Los botones se muestran según el rol (asignar y eliminar solo para el Administrador, avanzar estado para Administrador y Técnico),
+  pero la seguridad la sigue aplicando la API: si una petición no está permitida, la interfaz muestra el mensaje de error que devuelve.
+- Si el token expira, la interfaz cierra la sesión y vuelve al login.
+
+Capturas: [docs/interfaz/](docs/interfaz/).
+
+| Lista (Administrador) | Detalle (Administrador) |
+|---|---|
+| ![Lista](docs/interfaz/05-lista-admin.png) | ![Detalle](docs/interfaz/06-detalle-admin-pendiente.png) |
+
 Pruebas automáticas con evidencia (con la API corriendo y BD nueva, desde la raíz del repo):
 
 ```bash
@@ -49,6 +75,7 @@ Las contraseñas se guardan como **hash BCrypt**, nunca en texto plano.
 | PUT | `/api/incidentes/{id}/asignar` | Administrador | Asigna técnico `{ "tecnicoId": 2 }` |
 | PUT | `/api/incidentes/{id}/estado` | Admin, Técnico* | Avanza el estado `{ "nuevoEstado": "EnProceso" }` |
 | DELETE | `/api/incidentes/{id}` | Administrador | Elimina (no permitido si está `Cerrado`) |
+| GET | `/api/usuarios/tecnicos` | Administrador | Lista los técnicos (id y nombre) para asignar desde la interfaz |
 
 \* Admin ve todo; Técnico solo los asignados a él; Usuario solo los que creó.
 Valores: `prioridad` = `Baja|Media|Alta|Critica`; `estado` = `Pendiente → Asignado → EnProceso → Resuelto → Cerrado`.
@@ -80,10 +107,16 @@ TechSupport.API/
 ├── Models/        Usuario · Incidente · enums Rol, Prioridad, EstadoIncidente
 ├── DTOs/          entrada/salida (nunca se devuelve la entidad Usuario → no se filtra PasswordHash)
 └── Extensions/    lectura del id y rol desde los claims del token
+TechSupport.Web/
+├── Controllers/   AccountController (login/logout) · IncidentesController (lista, detalle, crear, asignar, estado, eliminar)
+├── Services/      ApiClient (llamadas HTTP a la API) · TokenHandler (agrega el JWT a cada petición)
+├── Models/        modelos de vista y respuestas de la API
+└── Views/         Razor + Bootstrap
 docs/
 ├── ANALISIS.md    Hoja de análisis: tabla A1, diagrama de estados A2, decisiones A3
 ├── PRUEBAS.md     Tabla de pruebas con evidencia y capturas
-└── evidencias/    Petición/respuesta de cada prueba (.txt) y capturas (.png)
+├── evidencias/    Petición/respuesta de cada prueba (.txt) y capturas (.png)
+└── interfaz/      Capturas de la interfaz web
 scripts/           pruebas.sh (ejecuta las pruebas) · capturas.js (genera PNG)
 ```
 
@@ -112,6 +145,7 @@ scripts/           pruebas.sh (ejecuta las pruebas) · capturas.js (genera PNG)
 - [x] Hoja de análisis: [docs/ANALISIS.md](docs/ANALISIS.md) (tabla A1, diagrama A2, decisiones A3).
 - [x] Tabla de pruebas con capturas: [docs/PRUEBAS.md](docs/PRUEBAS.md).
 - [x] README (este archivo).
+- [x] Reto extra: interfaz MVC que consume la API sin acceso a la base de datos (`TechSupport.Web`).
 
 ## Criterios de aceptación (con su evidencia)
 
