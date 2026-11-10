@@ -1,0 +1,60 @@
+@model List<Incidente>
+@{
+    ViewData["Title"] = "Incidentes";
+    var rol = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var subtitulo = rol switch
+    {
+        "Administrador" => "Todos los incidentes",
+        "Tecnico" => "Incidentes asignados a ti",
+        _ => "Incidentes que reportaste"
+    };
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-0">Incidentes</h1>
+        <p class="text-body-secondary mb-0">@subtitulo</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear">Nuevo incidente</a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="card">
+        <div class="card-body text-center text-body-secondary py-5">No hay incidentes para mostrar.</div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Prioridad</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Reporta</th>
+                        <th scope="col">Técnico</th>
+                        <th scope="col">Creado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model)
+                    {
+                        <tr>
+                            <td class="text-body-secondary">@i.Id</td>
+                            <td><a asp-action="Detalle" asp-route-id="@i.Id" class="fw-medium text-decoration-none">@i.Titulo</a></td>
+                            <td><span class="badge @Formato.ColorPrioridad(i.Prioridad)">@Formato.Prioridad(i.Prioridad)</span></td>
+                            <td><span class="badge @Formato.ColorEstado(i.Estado)">@Formato.Estado(i.Estado)</span></td>
+                            <td>@i.Usuario</td>
+                            <td>@(i.Tecnico ?? "—")</td>
+                            <td class="text-nowrap small">@Formato.Fecha(i.FechaCreacion)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

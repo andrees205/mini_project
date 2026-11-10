@@ -1,0 +1,43 @@
+@model CrearIncidenteViewModel
+@{
+    ViewData["Title"] = "Nuevo incidente";
+    var prioridades = new[] { "Baja", "Media", "Alta", "Critica" };
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <a asp-action="Index" class="small text-decoration-none">&larr; Volver a incidentes</a>
+        <h1 class="h3 mt-2 mb-3">Nuevo incidente</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Crear" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Titulo" class="form-label"></label>
+                        <input asp-for="Titulo" class="form-control" maxlength="150" placeholder="Ej.: La impresora del piso 2 no imprime" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Descripcion" class="form-label"></label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="5" maxlength="2000"
+                                  placeholder="Describe el problema, desde cuándo ocurre y a quién afecta"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Prioridad" class="form-label"></label>
+                        <select asp-for="Prioridad" class="form-select">
+                            @foreach (var p in prioridades)
+                            {
+                                <option value="@p">@Formato.Prioridad(p)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Crear incidente</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

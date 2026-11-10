@@ -1,0 +1,94 @@
+@model DetalleIncidenteViewModel
+@{
+    var i = Model.Incidente;
+    ViewData["Title"] = $"Incidente #{i.Id}";
+    var pasos = new[] { "Pendiente", "Asignado", "EnProceso", "Resuelto", "Cerrado" };
+    var indiceActual = Array.IndexOf(pasos, i.Estado);
+}
+
+<a asp-action="Index" class="small text-decoration-none">&larr; Volver a incidentes</a>
+
+<div class="d-flex flex-wrap align-items-center gap-2 mt-2 mb-3">
+    <h1 class="h3 mb-0 me-2">#@i.Id &middot; @i.Titulo</h1>
+    <span class="badge @Formato.ColorPrioridad(i.Prioridad)">@Formato.Prioridad(i.Prioridad)</span>
+    <span class="badge @Formato.ColorEstado(i.Estado)">@Formato.Estado(i.Estado)</span>
+</div>
+
+<ol class="progreso list-unstyled d-flex flex-wrap gap-2 mb-4">
+    @for (var p = 0; p < pasos.Length; p++)
+    {
+        var clase = p < indiceActual ? "hecho" : p == indiceActual ? "actual" : "";
+        <li class="paso @clase">@Formato.Estado(pasos[p])</li>
+    }
+</ol>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h6 text-body-secondary text-uppercase">Descripción</h2>
+                <p class="mb-4" style="white-space: pre-line">@i.Descripcion</p>
+
+                <dl class="row mb-0 small">
+                    <dt class="col-sm-4">Reportado por</dt>
+                    <dd class="col-sm-8">@i.Usuario</dd>
+                    <dt class="col-sm-4">Técnico asignado</dt>
+                    <dd class="col-sm-8">@(i.Tecnico ?? "Sin asignar")</dd>
+                    <dt class="col-sm-4">Fecha de creación</dt>
+                    <dd class="col-sm-8">@Formato.Fecha(i.FechaCreacion)</dd>
+                    <dt class="col-sm-4">Fecha de resolución</dt>
+                    <dd class="col-sm-8 mb-0">@Formato.Fecha(i.FechaResolucion)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <div class="card">
+            <div class="card-body d-grid gap-4">
+                @if (Model.PuedeAsignar)
+                {
+                    <form asp-action="Asignar" asp-route-id="@i.Id" method="post">
+                        <label for="tecnicoId" class="form-label fw-medium">@(i.TecnicoId is null ? "Asignar técnico" : "Reasignar técnico")</label>
+                        <div class="input-group">
+                            <select id="tecnicoId" name="tecnicoId" class="form-select" required>
+                                @foreach (var t in Model.Tecnicos)
+                                {
+                                    <option value="@t.Id" selected="@(t.Id == i.TecnicoId)">@t.NombreUsuario</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-primary">Asignar</button>
+                        </div>
+                    </form>
+                }
+
+                @if (Model.PuedeAvanzar)
+                {
+                    <form asp-action="CambiarEstado" asp-route-id="@i.Id" method="post">
+                        <input type="hidden" name="nuevoEstado" value="@i.SiguienteEstado" />
+                        <div class="form-label fw-medium">Avanzar estado</div>
+                        <button type="submit" class="btn btn-success w-100">
+                            Pasar a @Formato.Estado(i.SiguienteEstado!)
+                        </button>
+                    </form>
+                }
+                else if (i.Estado == "Pendiente" && !Model.EsAdministrador)
+                {
+                    <p class="text-body-secondary small mb-0">El incidente está pendiente de que un administrador asigne un técnico.</p>
+                }
+                else if (i.Estado == "Cerrado")
+                {
+                    <p class="text-body-secondary small mb-0">El incidente está cerrado. Si el problema vuelve, crea un incidente nuevo.</p>
+                }
+
+                @if (Model.PuedeEliminar)
+                {
+                    <form asp-action="Eliminar" asp-route-id="@i.Id" method="post"
+                          onsubmit="return confirm('¿Eliminar el incidente #@i.Id? Esta acción no se puede deshacer.');">
+                        <button type="submit" class="btn btn-outline-danger w-100">Eliminar incidente</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
