@@ -34,6 +34,8 @@ stateDiagram-v2
     end note
 ```
 
+![Diagrama de estados](diagrama-estados.png)
+
 Versión en texto (para la hoja en papel):
 
 ```
